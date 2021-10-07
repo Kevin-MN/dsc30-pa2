@@ -17,6 +17,7 @@ public class WeatherMonitor {
     
     public int numDays(int temp) {
        /* TODO */
+        return 0;
     }
     
 }
