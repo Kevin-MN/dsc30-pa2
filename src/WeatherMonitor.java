@@ -12,12 +12,13 @@
  */
 
 public class WeatherMonitor {
+    private final static int DEFAULT_CAPACITY = 5;
     IntStack weather_stack;
-    IntStack temp_stack;
+    IntStack reverse_stack;
 
     public WeatherMonitor() {
-        this.weather_stack = new IntStack(5);
-        this.temp_stack = new IntStack(5);
+        this.weather_stack = new IntStack(DEFAULT_CAPACITY);
+        this.reverse_stack = new IntStack(DEFAULT_CAPACITY);
     }
     
     public int numDays(int temp) {
@@ -26,28 +27,29 @@ public class WeatherMonitor {
             weather_stack.push(temp);
             return 0;
         }
-        int weather_size = weather_stack.size();
+        int recorded_weather_size = weather_stack.size();
 
-        for(int i = 0; i < weather_size;i++){
+        for(int i = 0; i < recorded_weather_size;i++){
            if(temp > weather_stack.peek()){
-               temp_stack.push(weather_stack.pop());
+               reverse_stack.push(weather_stack.pop());
            }
            else if(weather_stack.peek() >= temp){
                break;
            }
         }
 
-        if(temp_stack.isEmpty()){
+        if(reverse_stack.isEmpty()){
            weather_stack.push(temp);
            return 0;
         }
 
-        int temp_nums = temp_stack.size();
+        int greater_count = reverse_stack.size();
 
-        weather_stack.multiPush(temp_stack.multiPop(temp_stack.size()));
+        weather_stack.multiPush(reverse_stack.multiPop(reverse_stack.size()));
         weather_stack.push(temp);
 
-        return temp_nums;
+        return greater_count;
     }
     
 }
+

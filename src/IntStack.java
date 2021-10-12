@@ -14,7 +14,13 @@ import java.util.EmptyStackException;
  * @since  10/6/2021
  */
 public class IntStack {
-
+    private final static double DEFAULT_LOAD = 0.75;
+    private final static double DEFAULT_SHRINK = 0.25;
+    private final static double LOAD_FLOOR = 0.67;
+    private final static double LOAD_CEIL = 1;
+    private final static double SHRINK_FLOOR = 0;
+    private final static double SHRINK_CEIL = 0.33;
+    private final static int MINIMUM = 5;
     /* instance variables, feel free to add more if you need */
     private int[] data;
     private int nElems;
@@ -31,16 +37,16 @@ public class IntStack {
      * @throws IllegalArgumentException if capacity, loadF or shrinkF is out of valid range
      */
     public IntStack(int capacity, double loadF, double shrinkF) {
-        if(capacity < 5){
+        if(capacity < MINIMUM){
             throw new IllegalArgumentException("Capacity < 5, Invalid");
         }
 
-        if(loadF < 0.67 || loadF > 1){
+        if(loadF < LOAD_FLOOR || loadF > LOAD_CEIL){
             throw new IllegalArgumentException("loadF < 0.67 || loadF > 1," +
                     " Load factor is outside of valid range");
         }
 
-        if(shrinkF <= 0 || shrinkFactor >0.33){
+        if(shrinkF <= SHRINK_FLOOR || shrinkF > SHRINK_CEIL){
             throw new IllegalArgumentException("shrinkF <= 0 || shrinkFactor >0.33, " +
                     "Shrink factor is outside of valid range");
         }
@@ -50,7 +56,6 @@ public class IntStack {
         this.init_capacity = capacity;
         this.loadFactor = loadF;
         this.shrinkFactor  = shrinkF;
-
     }
 
     /**
@@ -61,7 +66,7 @@ public class IntStack {
      * @throws IllegalArgumentException if capacity or loadF is out of valid range
      */
     public IntStack(int capacity, double loadF) {
-        this(capacity, loadF, 0.25);
+        this(capacity, loadF, DEFAULT_SHRINK);
     }
 
     /**
@@ -70,7 +75,7 @@ public class IntStack {
      * @throws IllegalArgumentException if capacity is out of valid range
      */
     public IntStack(int capacity) {
-        this(capacity, 0.75 , 0.25);
+        this(capacity, DEFAULT_LOAD , DEFAULT_SHRINK);
     }
 
     /**
@@ -156,7 +161,7 @@ public class IntStack {
             throw new EmptyStackException();
         }
 
-        int temp = this.data[nElems - 1];
+        int top_element = this.data[nElems - 1];
 
         double calc_shrinkF = --nElems / (double)this.data.length;
 
@@ -164,7 +169,7 @@ public class IntStack {
             this.data = factor_size_copy(.5);
         }
 
-        return temp;
+        return top_element;
     }
 
     /**
@@ -203,44 +208,25 @@ public class IntStack {
     }
 
     /**
-     * This is a private helper method that creates a new array that is double or half the size,
-     * and copies the elements over to the new array, it returns a reference to the
-     * newly resized array
+     * This is a private helper method that creates a new array that is
+     * double or half the size, and copies the elements over to the new array,
+     * it returns a reference to the newly resized array
      * @param factor the factor to multiple the existing size by, 2 or 1/2
      * @return a reference to the newly created array with new size and same elements
      */
     private int[] factor_size_copy(double factor){
-        int [] temp;
+        int [] copy_arr;
         if(factor * this.data.length < init_capacity){
-            temp = new int[init_capacity];
+            copy_arr = new int[init_capacity];
         }
         else{
-            temp = new int[(int)(this.data.length * factor)];
+            copy_arr = new int[(int)(this.data.length * factor)];
         }
 
         for(int i = 0; i <= this.nElems - 1; i++) {
-            temp[i] = this.data[i];
+            copy_arr[i] = this.data[i];
         }
-        return temp;
+        return copy_arr;
     }
-
-
-    //Extra methods that were used to help debug the IntStack
-
-
-    public void print_stack_using_size(){
-        for(int i = 0;i< nElems;i++){
-            System.out.print(this.data[i] + " ");
-        }
-        System.out.println();
-    }
-
-    public void print_stack(){
-        for(int i = 0;i< this.data.length;i++){
-            System.out.print(this.data[i] + " ");
-        }
-        System.out.println();
-    }
-
 
 }
