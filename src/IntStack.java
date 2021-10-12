@@ -8,7 +8,8 @@ import java.util.EmptyStackException;
 /**
  * This class is the implementation of a stack that works with primitive integers, it is
  * implemented by using a integer array that can be resized based on a expand/shrink factor,
- * there are also various methods to push a pop single or many elements.
+ * there are also various methods to push a pop single or many elements and also check the
+ * key attributes of the stack.
  * @author Kevin Morales Nguyen
  * @since  10/6/2021
  */
@@ -21,17 +22,27 @@ public class IntStack {
     private double loadFactor;
     private double shrinkFactor;
 
+
+    /**
+     *This is the constructor that contains all the paramaters for initialization
+     * @param capacity a value that specifies the size of the internal array
+     * @param loadF ratio that specifies when to double the array size, size/capacity
+     * @param shrinkF ratio that specifies when to shrink the array buy half, size/capacity
+     * @throws IllegalArgumentException if capacity, loadF or shrinkF is out of valid range
+     */
     public IntStack(int capacity, double loadF, double shrinkF) {
         if(capacity < 5){
-            throw new IllegalArgumentException("Capacity <= 0, Invalid");
+            throw new IllegalArgumentException("Capacity < 5, Invalid");
         }
 
         if(loadF < 0.67 || loadF > 1){
-            throw new IllegalArgumentException("Load factor is outside of valid range");
+            throw new IllegalArgumentException("loadF < 0.67 || loadF > 1," +
+                    " Load factor is outside of valid range");
         }
 
         if(shrinkF <= 0 || shrinkFactor >0.33){
-            throw new IllegalArgumentException("Shrink factor is outside of valid range");
+            throw new IllegalArgumentException("shrinkF <= 0 || shrinkFactor >0.33, " +
+                    "Shrink factor is outside of valid range");
         }
 
         this.data = new int[capacity];
@@ -42,14 +53,30 @@ public class IntStack {
 
     }
 
+    /**
+     *This constructor takes the capacity and load factor arguments
+     *
+     * @param capacity a value that specifies the size of the internal array
+     * @param loadF ratio that specifies when to double the array size, size/capacity
+     * @throws IllegalArgumentException if capacity or loadF is out of valid range
+     */
     public IntStack(int capacity, double loadF) {
         this(capacity, loadF, 0.25);
     }
 
+    /**
+     *This is the simplest constructor which only takes the capacity
+     * @param capacity a value that specifies the size of the internal array
+     * @throws IllegalArgumentException if capacity is out of valid range
+     */
     public IntStack(int capacity) {
         this(capacity, 0.75 , 0.25);
     }
 
+    /**
+     *This methods returns a boolean indicating if the stack is "empty", nElems == 0
+     * @return boolean, true if empty, false if not empty
+     */
     public boolean isEmpty() {
         if(this.nElems == 0){
             return true;
@@ -59,24 +86,52 @@ public class IntStack {
         }
     }
 
+    /**
+     *This method clears the stack by creating a new one using the initial capacity and
+     * assigning it's reference to the data instance variable
+     */
     public void clear() {
         this.data = new int[init_capacity];
         this.nElems = 0;
     }
 
+    /**
+     * This method returns the size of the stack which is the number of elements pushed
+     * onto the stack, this value is held by nELems
+     * @return
+     */
     public int size() {
         return this.nElems;
 
     }
 
+    /**
+     * returns the total capcaity of the stack, which is the length of the internal array
+     *
+     * @return the size of the internal array, this.data.length
+     */
     public int capacity() {
         return this.data.length;
     }
 
+    /**
+     *This method returns the top element of the stack, does not change it's state at all
+     * @return top element on stack
+     * @throws EmptyStackException if the stack is empty
+     */
     public int peek() {
+        if(nElems == 0){
+            throw new EmptyStackException();
+        }
+
         return this.data[nElems-1];
     }
 
+    /**
+     *This method pushes a value passed as an argument onto the stack, sets
+     * value in internal array
+     * @param element the value to push into the stack
+     */
     public void push(int element) {
 
         double calc_loadF = ++nElems / (double)this.data.length;
@@ -91,52 +146,101 @@ public class IntStack {
         nElems++;
     }
 
+    /**
+     * This method returns the element on the top of the stack
+     * @return top element in stack
+     * @throws EmptyStackException if the stack is empty
+     */
     public int pop() {
-        nElems--;
+        if(nElems == 0){
+            throw new EmptyStackException();
+        }
+
         int temp = this.data[nElems - 1];
 
-        //double shrink_factor =
-        //if(){
+        double calc_shrinkF = --nElems / (double)this.data.length;
 
-        //}
-
-
-
+        if(calc_shrinkF <= shrinkFactor ){
+            this.data = factor_size_copy(.5);
+        }
 
         return temp;
     }
 
+    /**
+     *This method pushes multiple elements onto the stack that are in an array
+     * @param elements an array containing elements to be pushed onto the stack
+     * @throws IllegalArgumentException  if elements is null
+     */
     public void multiPush(int[] elements) {
-        nElems+= elements.length;
+        if(elements == null){
+            throw new IllegalArgumentException("elements is null");
+        }
 
+        for(int i = 0; i < elements.length;i++){
+            this.push(elements[i]);
+        }
     }
 
+    /**
+     * This methods pop multiple elements specified by the amount of elements as a parameter
+     * @param amount number of elements to pop
+     * @return array containing the elements that were popped in the order they came out
+     * @throws IllegalArgumentException if
+     */
     public int[] multiPop(int amount) {
-        /* TODO */
-        return null;
+        if(amount <= 0){
+            throw new IllegalArgumentException("amount is non-positive number");
+        }
+
+        int[] return_arr = new int[amount];
+
+        for(int i = 0;i < amount;i++){
+            return_arr[i] = this.pop();
+        }
+
+        return return_arr;
     }
 
-
+    /**
+     * This is a private helper method that creates a new array that is double or half the size,
+     * and copies the elements over to the new array, it returns a reference to the
+     * newly resized array
+     * @param factor the factor to multiple the existing size by, 2 or 1/2
+     * @return a reference to the newly created array with new size and same elements
+     */
     private int[] factor_size_copy(double factor){
+        int [] temp;
+        if(factor * this.data.length < init_capacity){
+            temp = new int[init_capacity];
+        }
+        else{
+            temp = new int[(int)(this.data.length * factor)];
+        }
 
-        int[] temp = new int[(int)(this.data.length * factor)];
-        for(int i = 0; i < this.nElems - 1; i++) {
+        for(int i = 0; i <= this.nElems - 1; i++) {
             temp[i] = this.data[i];
         }
         return temp;
     }
 
-    public void print_arr_using_size(){
+
+    //Extra methods that were used to help debug the IntStack
+
+
+    public void print_stack_using_size(){
         for(int i = 0;i< nElems;i++){
             System.out.print(this.data[i] + " ");
         }
         System.out.println();
     }
 
-    public void print_arr(){
+    public void print_stack(){
         for(int i = 0;i< this.data.length;i++){
             System.out.print(this.data[i] + " ");
         }
         System.out.println();
     }
+
+
 }
