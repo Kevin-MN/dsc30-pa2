@@ -1,5 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.EmptyStackException;
 
 import static org.junit.Assert.*;
@@ -62,7 +63,7 @@ public class IntStackTest {
     @Test
     public void construct_3_test_2(){
         IntStack construct3 = new IntStack(5);
-        assertEquals(0, construct3.size());
+       assertEquals(0, construct3.size());
     }
 
     @Test
@@ -76,7 +77,7 @@ public class IntStackTest {
 
     @Test
     public void isEmptyTest1() {
-        assertEquals(true, this.empty_stack.isEmpty());
+       assertEquals(true, this.empty_stack.isEmpty());
 
     }
 
@@ -107,7 +108,7 @@ public class IntStackTest {
     @Test
     public void clearTest3() {
         this.non_empty_stack.clear();
-        assertEquals(0, this.non_empty_stack.size());
+       assertEquals(0, this.non_empty_stack.size());
     }
 
     // size() TESTS
@@ -153,8 +154,7 @@ public class IntStackTest {
     }
 
     @Test
-    public void peekTest2() {
-        assertEquals(10, this.non_empty_stack.peek());
+    public void peekTest2(){ assertEquals(10, this.non_empty_stack.peek());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class IntStackTest {
     @Test
     public void pushTest1() {
         this.empty_stack.push(10);
-        assertEquals(10, this.empty_stack.peek());
+       assertEquals(10, this.empty_stack.peek());
     }
 
     @Test
