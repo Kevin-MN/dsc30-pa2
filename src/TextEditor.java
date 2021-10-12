@@ -100,8 +100,6 @@ public class TextEditor {
 
         this.text = first_half.concat(converted.concat(second_half));
 
-
-
     }
 
     /**
@@ -140,11 +138,6 @@ public class TextEditor {
             this.text = first_half.concat(input.concat(second_half));
         }
 
-
-
-
-
-
     }
 
     /**
@@ -180,12 +173,6 @@ public class TextEditor {
         this.deletedText.push(delete);
 
         this.text = first_half.concat(second_half);
-
-
-
-
-
-
 
 
     }
@@ -248,9 +235,6 @@ public class TextEditor {
 
                    this.text = first_half1.concat(second_half1);
 
-
-
-
                    return true;
                case 2:
 
@@ -270,11 +254,6 @@ public class TextEditor {
                        String second_half2= this.text.substring(start_index);
                        this.text = first_half2.concat(this.deletedText.pop().concat(second_half2));
                    }
-
-
-
-
-
 
                    return true;
                default:
@@ -327,12 +306,6 @@ public class TextEditor {
 
                      this.text = first_half.concat(converted.concat(second_half));
 
-
-
-
-
-
-
                      return true;
                  case 1:
 
@@ -352,9 +325,6 @@ public class TextEditor {
                          String second_half1= this.text.substring(start_index);
                          this.text = first_half1.concat(this.insertedText.pop().concat(second_half1));
                      }
-
-
-
 
 
                      return true;
@@ -378,18 +348,6 @@ public class TextEditor {
 
         }
     }
-
-
-    public void print_stacks(){
-        System.out.println();
-        System.out.println("undo " + undo.size());
-        System.out.println("redo " + redo.size());
-        System.out.println("deletedText " + deletedText.size());
-        System.out.println("insertedText "  + insertedText.size());
-        System.out.println();
-    }
-
-
 
 }
 

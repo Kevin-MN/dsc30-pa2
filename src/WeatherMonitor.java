@@ -16,11 +16,23 @@ public class WeatherMonitor {
     IntStack weather_stack;
     IntStack reverse_stack;
 
+    /**
+     * This is the simple constructor for the WeatherMonitor class, it
+     * just initializes the attribute stacks with default constructors and capacity
+     */
     public WeatherMonitor() {
         this.weather_stack = new IntStack(DEFAULT_CAPACITY);
         this.reverse_stack = new IntStack(DEFAULT_CAPACITY);
     }
-    
+
+    /**
+     * This method adds a temp to the stack and also returns the number of consecutive
+     * days that temp was hotter than previous days
+     *
+     * @param temp the temp to add to stack and compare sequentally
+     * @return a integer that represents the number of consecutive days
+     *          that temp was greater than previous days in the stack
+     */
     public int numDays(int temp) {
 
         if(weather_stack.size() == 0){
